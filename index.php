@@ -6,7 +6,7 @@
 <body>
 <h1>P5 Projects:</h1>
 <?php
-$files = scandir(__dir);
+$files = scandir(__DIR__);
 
 foreach($files as $file){
     echo '<a href=' . $file . '>' . $file . '</a>';   
