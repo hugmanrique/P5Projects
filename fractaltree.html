@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>P5 Fractal Tree - Hugmanrique</title>
+</head>
+<body>
+
+</body>
+<script data-cfasync="false" src="resources/p5.min.js"></script>
+<script data-cfasync="false" src="resources/p5.dom.js"></script>
+<script>
+    var slider;
+    
+    function setup(){
+        createCanvas(400, 400);
+        slider = createSlider(0, TWO_PI, PI / 4, 0.01);
+    }
+
+    function draw(){
+        background(51);
+        stroke(255);
+        translate(width / 2, height);
+        branch(100);
+    }
+    
+    function branch(length){
+        
+        line(0, 0, 0, -length);
+        translate(0, -length);
+        
+        angle = slider.value();
+
+        if (length > 4) {
+            length *= (2 / 3);
+
+            push();
+            rotate(angle);
+            branch(length);
+            pop();
+            
+            push();
+            rotate(-angle);
+            branch(length);
+            pop();
+        }
+    }
+</script>
+</html>
