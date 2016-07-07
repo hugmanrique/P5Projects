@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Fireworks</title>
+    <style>
+        body {
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+
+</body>
+<script data-cfasync="false" src="resources/p5.min.js"></script>
+<script>
+    var fireworks = [];
+    var gravity;
+    
+    function setup(){
+        createCanvas(1900, 1000);
+        gravity = createVector(0, 0.2);
+
+        stroke(255);
+        strokeWeight(4);
+        background(0);
+    }
+    
+    function draw(){
+        colorMode(RGB);
+        background(0, 0, 0, 25);
+        colorMode(HSB);
+        
+        if (random(1) < 0.03){
+            fireworks.push(new Firework());   
+        }
+        
+        for (var i = fireworks.length - 1; i >= 0; i--){
+            var firework = fireworks[i];
+            
+            firework.update();
+            firework.show();
+            
+            if (firework.done()){
+                fireworks.splice(i, 1);
+            }
+        }
+    }
+    
+    function Firework(){
+        this.firework = new Particle(random(width), height, this.hu, true);
+        this.hu = random(255);
+        this.particles = [];
+        this.exploded = false;
+        
+        this.update = function(){
+            if (!this.exploded){
+                this.firework.applyForce(gravity);
+                this.firework.update();
+
+                if (this.firework.vel.y >= 0){
+                    this.exploded = true;
+                    this.explode();
+                }   
+            } else {
+                for (var i = this.particles.length - 1; i >=0; i--){
+                    this.particles[i].applyForce(gravity);
+                    this.particles[i].update();
+                    
+                    if (this.particles[i].done()){
+                        this.particles.splice(i, 1);
+                    }
+                }
+            }
+        };
+
+        this.explode = function(){
+            var maxParticles = 100;
+            
+            for (var i = 0; i < maxParticles; i++){
+                var p = new Particle(this.firework.pos.x, this.firework.pos.y, this.hu, false);
+                this.particles.push(p);
+            }
+        };
+        
+        this.show = function(){
+            if (!this.exploded){
+                this.firework.show();   
+            } else {
+                for (var i = 0; i < this.particles.length; i++){
+                    this.particles[i].show();
+                }   
+            }
+        };
+        
+        this.done = function(){
+            return this.exploded && this.particles.length === 0;
+        }
+    }
+    
+    function Particle(x, y, hu, firework){
+        this.pos = createVector(x, y);
+        this.firework = firework;
+        this.radius = 0.95;
+        this.hu = hu;
+        this.lifespan = 255;
+        
+        if (this.firework){ //-12, -8
+            this.vel = createVector(0, random(height * -0.005, height * -0.02));   
+        } else {
+            this.vel = p5.Vector.random2D();
+            this.vel.mult(random(2, 10));
+        }
+        
+        this.acc = createVector(0, 0);
+        
+        this.applyForce = function(force){
+            this.acc.add(force);
+        };
+        
+        this.update = function(){
+            if (!this.firework){
+                this.vel.mult(this.radius);
+                this.lifespan -= 4;
+            }
+            
+            this.vel.add(this.acc);
+            this.pos.add(this.vel);
+            this.acc.mult(0);
+        };
+        
+        this.show = function(){
+            if (!this.firework){
+                strokeWeight(2);
+                stroke(hu, 255, 255, this.lifespan);
+            } else {
+                strokeWeight(4);
+                stroke(hu, 255, 255);
+            }
+            
+            point(this.pos.x, this.pos.y);
+        };
+        
+        this.done = function(){
+            return this.lifespan <= 0;  
+        };
+    }
+</script>
+</html>

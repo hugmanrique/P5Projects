@@ -5,12 +5,17 @@
 </head>
 <body>
 <h1>P5 Projects:</h1>
+<ul>
 <?php
 $files = scandir(__DIR__);
+$files = array_filter($files, function($item) {
+    return !is_dir(__DIR__ . '/' . $item) && strpos($item, 'html') !== false;
+});
 
 foreach($files as $file){
-    echo '<a href=' . $file . '>' . $file . '</a>';   
+    echo '<li><a href=' . $file . '>' . $file . '</a></li>';   
 }
 ?>
+</ul>
 </body>
 </html>
