@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Julia Sets</title>
+</head>
+<body>
+<a href="https://github.com/hugmanrique/P5Projects"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
+
+</body>
+<script data-cfasync="false" src="resources/p5.min.js"></script>
+<script data-cfasync="false" src="resources/p5.dom.js"></script>
+<script>
+    var minSlider;
+    var maxSlider;
+
+    function setup() {
+        createCanvas(400, 400);
+        pixelDensity(1);
+
+        minSlider = createSlider(-2.5, 0, -2.5, 0.01);
+        maxSlider = createSlider(0, 2.5, 2.5, 0.01);
+    }
+
+    function draw() {
+        var iterations = 100;
+
+        loadPixels();
+        
+        for (var x = 0; x < width; x++) {
+            for (var y = 0; y < height; y++) {
+                var a = map(x, 0, width, minSlider.value(), maxSlider.value());
+                var b = map(y, 0, height, minSlider.value(), maxSlider.value());
+
+                var ca = a;
+                var cb = b;
+
+                var n = 0;
+
+                while (n++ < iterations) {
+                    var aa = a * a - b * b;
+                    var bb = 2 * a * b;
+                    
+                    a = aa + ca;
+                    b = bb + cb;
+                    
+                    if (a * a + b * b > 16) {
+                        break;
+                    }
+                }
+
+                var bright = map(n, 0, iterations, 0, 1);
+                bright = map(sqrt(bright), 0, 1, 0, 255);
+
+                if (n == iterations) {
+                    bright = 0;
+                }
+
+                var pix = (x + y * width) * 4;
+                pixels[pix] = bright;
+                pixels[pix + 1] = bright;
+                pixels[pix + 2] = bright;
+                pixels[pix + 3] = 255;
+            }
+        }
+        
+        updatePixels();
+    }
+</script>
+</html>
