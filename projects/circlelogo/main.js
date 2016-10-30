@@ -170,3 +170,35 @@ Circle.prototype.getColor = function () {
         this.color[3] = minAlpha;
     }
 };
+
+// P5.js loadImage CORS hack
+p5.prototype.loadImage = function(path, successCallback, failureCallback) {
+    var img = new Image();
+    var pImg = new p5.Image(1, 1, this);
+    var decrementPreload = p5._getDecrementPreload.apply(this, arguments);
+
+    img.onload = function() {
+        pImg.width = pImg.canvas.width = img.width;
+        pImg.height = pImg.canvas.height = img.height;
+        pImg.drawingContext.drawImage(img, 0, 0);
+
+        if (typeof successCallback === 'function') {
+            successCallback(pImg);
+        }
+        if (decrementPreload && (successCallback !== decrementPreload)) {
+            decrementPreload();
+        }
+    };
+    img.onerror = function(e) {
+        p5._friendlyFileLoadError(0,img.src);
+        if ((typeof failureCallback === 'function') &&
+            (failureCallback !== decrementPreload)) {
+            failureCallback(e);
+        }
+    };
+
+    img.crossOrigin = 'Anonymous';
+    img.src = path;
+
+    return pImg;
+};
