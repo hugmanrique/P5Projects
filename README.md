@@ -1,12 +1,12 @@
-#P5Projects
+# P5Projects
 
-Personal projects made for fun available at [hugmanrique.me/p5/](hugmanrique.me/p5/).
+Personal projects made for fun available at one of my [GH Pages](https://hugmanrique.github.io/P5Projects/).
 
-##Instructions:
+## Instructions:
 When you enter the page, you will see a list of HTML files. Simply click on one and the sketch will be loaded automatically.
 
-##Donate:
-If you think this work helped you, please consider donating at [hugmanrique.me/donar](https://hugmanrique.me/donar).
+## Donate:
+If you think this work helped you, please consider donating at [hugmanrique.me/donate/](https://hugmanrique.me/donate/).
 
-##License:
+## License:
 This project is licensed under the MIT License. You can read all its details [here](LICENSE).
